@@ -1,0 +1,12 @@
+---
+- name: stop keystone
+  service: name=keystone state=stopped
+
+- name: stop apache2
+  service: name:apache2 state=stopped
+
+- name: restart keystone
+  service: name=keystone state=restarted
+
+- name: restart apache2
+  service: name:apache2 state=restarted

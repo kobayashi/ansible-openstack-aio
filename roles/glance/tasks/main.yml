@@ -1,0 +1,37 @@
+---
+- name: install glance packages
+  apt: name={{ item }} state=latest force=yes
+  with_items:
+    - glance
+    - python-glanceclient
+
+- name: update glance conf
+  template: src={{ item }} dest=/etc/glance/{{ item }} backup=yes
+  with_items:
+    - glance-api.conf
+    - glance-registry.conf
+  notify:
+    - restart glance-registry
+    - restart glance-api
+
+#- name: manually stop glance-api
+#  service: name=glance-api state=stopped
+
+#- name: manually stop glance-registry
+#  service: name=glance-registry state=stopped
+
+- name: remove default sqlite db
+  shell: rm /var/lib/glance/glance.sqlite || touch glance.sqllite.db.removed
+
+- name: sync glance db
+  shell: su -s /bin/sh -c "glance-manage db_sync" glance
+  notify:
+    - restart glance-registry
+    - restart glance-api
+
+- meta: flush_handlers
+
+- name: wait for 9292 port to become available
+  wait_for: port=9292 delay=5
+
+- include: upload_image.yml

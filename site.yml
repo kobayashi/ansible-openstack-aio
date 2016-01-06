@@ -1,0 +1,13 @@
+---
+- hosts: server
+  user: vagrant
+  sudo: True
+  roles:
+    - { role: common }
+    - { role: database }
+    - { role: mq }
+    - { role: keystone }
+    - { role: glance }
+    - { role: nova }
+    - { role: neutron }
+    - { role: dashboard }

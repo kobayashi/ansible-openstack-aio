@@ -1,0 +1,11 @@
+- name: Adding OS images into Glance
+  environment: admin_openrc_env
+  command: "{{item}}"
+  with_items:
+  - glance image-create --location http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img --name "CirrOS 0.3.4 - Cirros - 64-bit - Cloud Based Image" --is-public true --container-format bare --disk-format qcow2
+  - glance image-create --location http://uec-images.ubuntu.com/releases/15.04/release/ubuntu-15.04-server-cloudimg-amd64-disk1.img --is-public true --disk-format qcow2 --container-format bare --name "Ubuntu 15.04 - Vivid Vervet - 64-bit - Cloud Based Image"
+  - glance image-create --location http://uec-images.ubuntu.com/releases/14.04.3/release/ubuntu-14.04-server-cloudimg-amd64-disk1.img --is-public true --disk-format qcow2 --container-format bare --name "Ubuntu 14.04.3 LTS - Trusty Tahr - 64-bit - Cloud Based Image"
+  - glance image-update --property hw_scsi_model=virtio-scsi --property hw_disk_bus=scsi "CirrOS 0.3.4 - Cirros - 64-bit - Cloud Based Image"
+  - glance image-update --property hw_scsi_model=virtio-scsi --property hw_disk_bus=scsi "Ubuntu 15.04 - Vivid Vervet - 64-bit - Cloud Based Image"
+  - glance image-update --property hw_scsi_model=virtio-scsi --property hw_disk_bus=scsi "Ubuntu 14.04.3 LTS - Trusty Tahr - 64-bit - Cloud Based Image"
+  register: glance_images_created

@@ -1,0 +1,75 @@
+---
+- name: disble start automatically
+  command: echo "manual" > /etc/init/keystone.override
+
+- name: install keystone packages
+  apt: name={{ item }} state=present force=yes
+  with_items:
+    - keystone
+    - apache2
+    - libapache2-mod-wsgi
+    - memcached
+    - python-memcache
+
+- name: stop apache2
+  service: name=apache2 state=stopped
+
+- name: install openstack-client
+  apt: name=python-openstackclient state=present force=yes
+
+- name: update keystone conf
+  template: src=keystone.conf dest=/etc/keystone/keystone.conf backup=yes
+  notify: stop keystone
+
+- name: keystone-manage db-sync
+  shell: su -s /bin/sh -c "keystone-manage db_sync" keystone
+
+- name: update apache2 conf
+  template: src=apache2.conf dest=/etc/apache2/apache2.conf backup=yes
+
+- name: create wsgi-keystone conf
+  template: src=wsgi-keystone.conf dest=/etc/apache2/sites-available/wsgi-keystone.conf backup=yes
+
+- name: change owner
+  file: path=/etc/apache2/sites-available/wsgi-keystone.conf owner=root group=root mode=0644
+- name: link wsgi-keystone conf
+  file: src=/etc/apache2/sites-available/wsgi-keystone.conf dest=/etc/apache2/sites-enabled/wsgi-keystome.conf state=link force=yes
+
+- name: create keystone directry
+  file: path=/var/www/cgi-bin/keystone state=directory
+
+- name: Copy the WSGI components from the upstream repository to main
+  get_url: url=http://git.openstack.org/cgit/openstack/keystone/plain/httpd/keystone.py?h=stable/kilo dest=/var/www/cgi-bin/keystone/main force=yes
+
+- name: Copy the WSGI components from the upstream repository to admin
+  get_url: url=http://git.openstack.org/cgit/openstack/keystone/plain/httpd/keystone.py?h=stable/kilo dest=/var/www/cgi-bin/keystone/admin force=yes
+
+- name: change permission main
+  file: path=/var/www/cgi-bin/keystone/main mode=755
+- name: change permission for admin
+  file: path=/var/www/cgi-bin/keystone/admin mode=755
+
+
+- name: delete sqlite database
+  shell: rm /var/lib/keystone/keystone.db || echo sqllite database already removed
+
+- name: manually stop keystone once
+  service: name=keystone state=stopped
+
+- name: manually start keystone
+  service: name=keystone state=started
+
+- name: manually start apache2
+  service: name=apache2 state=restarted
+
+- name: keystone source files
+  template: src={{ item }} dest=/opt/{{ item }}
+  with_items:
+    - admin-openrc.sh
+    - demo-openrc.sh
+
+- include: project.yml
+
+- include: services.yml
+
+- include: endpoints.yml

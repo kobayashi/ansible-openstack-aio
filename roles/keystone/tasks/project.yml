@@ -1,0 +1,33 @@
+- name: Creating Projects, Users and Roles
+  environment: TOKEN_ENV
+  command: "{{item}}"
+  with_items:
+  - openstack project create --description "Admin Project" admin
+  - openstack user create --password admin admin
+  - openstack role create admin
+  - openstack role add --project admin --user admin admin
+  - openstack project create --description "Service Project" service
+  - openstack project create --description "Demo Project" demo
+  - openstack user create --password "{{DEMO_PASS}}" demo
+  - openstack role create _member_
+  - openstack role add --project demo --user demo _member_
+  - openstack role create user
+  - openstack role add --project demo --user demo user
+  - openstack user create --password "{{GLANCE_PASS}}" glance
+  - openstack role add --project service --user glance admin
+  - openstack user create --password "{{NOVA_PASS}}" nova
+  - openstack role add --project service --user nova admin
+  - openstack user create --password "{{NEUTRON_PASS}}" neutron
+  - openstack role add --project service --user neutron admin
+  #- openstack user create --password "{{CINDER_PASS}}" cinder
+  #- openstack role add --project service --user cinder admin
+  #- openstack user create --password "{{SWIFT_ASS}}" swift
+  #- openstack role add --project service --user swift admin
+  #- openstack user create --password "{{HEAT_PASS}}" heat
+  #- openstack role add --project service --user heat admin
+  #- openstack role create heat_stack_owner
+  #- openstack role add --project demo --user demo heat_stack_owner
+  #- openstack role create heat_stack_user
+  #- openstack user create --password "{{CEILO_PASS}}" ceilometer
+  #- openstack role add --project service --user ceilometer admin
+  register: openstack_pur_ready
