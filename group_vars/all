@@ -19,7 +19,7 @@ NOVA_DBPASS: nova
 NOVA_PASS: nova
 NEUTRON_DBPASS: neutron
 NEUTRON_PASS: neutron
-NEUTRON_TYPE_DRIVERS: ['flat', 'gre', 'vxlan']
+NEUTRON_TYPE_DRIVERS: ['local', 'flat', 'gre', 'vxlan']
 NEUTRON_TENANT_NETWORK_TYPES: ['gre']
 #NEUTRON_MECHANISM_DRIVERS: ['opendaylight']
 NEUTRON_MECHANISM_DRIVERS: ['openvswitch']

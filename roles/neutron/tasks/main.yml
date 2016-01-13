@@ -16,8 +16,6 @@
   with_items:
     - neutron-server
     - neutron-plugin-ml2
-    - openvswitch-datapath-dkms
-    - openvswitch-switch
     - neutron-l3-agent
     - neutron-dhcp-agent
     - neutron-metadata-agent
