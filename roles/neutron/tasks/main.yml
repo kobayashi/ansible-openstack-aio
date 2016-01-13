@@ -10,7 +10,6 @@
 
 - name: activate nf call iptables
   sysctl: name=net.bridge.bridge-nf-call-iptables value=1 state=present reload=yes
-  sysctl: name=net.bridge.bridge-nf-call-ip6tables value=1 state=present reload=yes
 
 - name: install neutron network related packages
   apt: name={{ item }} state=present force=yes

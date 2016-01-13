@@ -3,16 +3,17 @@
   command: "{{item}}"
   with_items:
   - openstack project create --description "Admin Project" admin
-  - openstack user create --password admin admin
-  - openstack role create admin
-  - openstack role add --project admin --user admin admin
   - openstack project create --description "Service Project" service
   - openstack project create --description "Demo Project" demo
+  - openstack user create --password admin admin
   - openstack user create --password "{{DEMO_PASS}}" demo
+  - openstack role create admin
   - openstack role create _member_
+  - openstack role create demo
+  - openstack role add --project admin --user admin admin
+  - openstack role add --project demo --user demo demo
   - openstack role add --project demo --user demo _member_
-  - openstack role create user
-  - openstack role add --project demo --user demo user
+  - openstack role add --project admin --user admin _member_
   - openstack user create --password "{{GLANCE_PASS}}" glance
   - openstack role add --project service --user glance admin
   - openstack user create --password "{{NOVA_PASS}}" nova
