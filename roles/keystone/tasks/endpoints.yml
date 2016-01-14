@@ -3,7 +3,7 @@
   command: "{{item}}"
   with_items:
   - openstack endpoint create --region RegionOne --publicurl http://{{PUBLIC_IP}}:5000/v2.0 --internalurl http://controller:5000/v2.0 --adminurl http://controller:35357/v2.0 identity
-  - openstack endpoint create --region RegionOne --publicurl http://{{PUBLIC_IP}}:5000/v3 --internalurl http://controller:5000/v3 --adminurl http://controller:35357/v3 identity
+ # - openstack endpoint create --region RegionOne --publicurl http://{{PUBLIC_IP}}:5000/v3 --internalurl http://controller:5000/v3 --adminurl http://controller:35357/v3 identity
   - openstack endpoint create --region RegionOne --publicurl http://{{PUBLIC_IP}}:9292 --internalurl http://controller:9292 --adminurl http://controller:9292 image
   - openstack endpoint create --region RegionOne --publicurl http://{{PUBLIC_IP}}:8774/v2/%\(tenant_id\)s --internalurl http://controller:8774/v2/%\(tenant_id\)s --adminurl http://controller:8774/v2/%\(tenant_id\)s compute
   - openstack endpoint create --region RegionOne --publicurl http://{{PUBLIC_IP}}:9696 --internalurl http://controller:9696 --adminurl http://controller:9696 network
